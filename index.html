@@ -7,95 +7,116 @@
 <script type="module"
   src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
 <style>
-:root{--blue:#0176D3;--navy:#032D60;--ink:#181818;--mut:#5C5C5C;--line:#E5E5E5;
-      --bg:#F3F6F9;--card:#fff;--red:#BA0517;--amber:#8C4B02;--green:#2E844A;--amberbg:#FEF6E6}
+:root{--blue:#0176D3;--navy:#032D60;--ink:#181818;--mut:#5C5C5C;--line:#E3E7EB;
+      --bg:#EEF2F6;--card:#fff;--red:#BA0517;--amber:#8C4B02;--green:#2E844A;--amberbg:#FEF6E6}
 *{box-sizing:border-box}
-body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+html,body{margin:0;height:100%}
+body{font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
      background:var(--bg);color:var(--ink)}
-.wrap{max-width:1500px;margin:0 auto;padding:18px 22px 44px}
-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#0176D3,#032D60);
-      display:grid;place-items:center;color:#fff;font-weight:700}
-h1{font-size:20px;margin:0;letter-spacing:-.2px}
-.sub{color:var(--mut);font-size:13px;margin:2px 0 0}
-.badge{margin-left:auto;background:var(--amberbg);color:var(--amber);border:1px solid #F2D9A7;
-       padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.wrap{max-width:1680px;margin:0 auto;padding:12px 16px 20px}
 
-/* live link status */
-.link{display:flex;align-items:center;gap:8px;background:#EAF7EE;border:1px solid #BFE3CC;
-      color:#1B6E3C;border-radius:9px;padding:9px 13px;font-size:13px;margin:14px 0;font-weight:500}
+/* ---------- header: one tight row ---------- */
+header{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.logo{width:32px;height:32px;border-radius:8px;flex:0 0 auto;
+      background:linear-gradient(135deg,#0176D3,#032D60);display:grid;place-items:center;
+      color:#fff;font-weight:700;font-size:13px}
+h1{font-size:17px;margin:0;letter-spacing:-.2px;white-space:nowrap}
+.sub{color:var(--mut);font-size:12px;margin:0}
+.badge{margin-left:auto;background:var(--amberbg);color:var(--amber);border:1px solid #F2D9A7;
+       padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+
+/* ---------- status strip ---------- */
+.link{display:flex;align-items:center;gap:7px;background:#EAF7EE;border:1px solid #BFE3CC;
+      color:#1B6E3C;border-radius:7px;padding:6px 11px;font-size:12px;margin-bottom:10px}
 .link.warn{background:#FEF6E6;border-color:#F2D9A7;color:#8C4B02}
-.dot{width:8px;height:8px;border-radius:50%;background:#2E844A;flex:0 0 auto;
+.dot{width:7px;height:7px;border-radius:50%;background:#2E844A;flex:0 0 auto;
      animation:pulse 1.8s ease-in-out infinite}
 .link.warn .dot{background:#B25400;animation:none}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.link b{font-weight:700}
-.link .cur{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.link .cur{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;
+           opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46%}
 
-.grid{display:grid;grid-template-columns:1fr 420px;gap:18px}
-@media(max-width:1180px){.grid{grid-template-columns:1fr}}
+/* ---------- main split ---------- */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:12px;align-items:start}
+@media(max-width:1240px){.grid{grid-template-columns:1fr}}
 
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 17px;margin-bottom:16px}
-.card h2{font-size:13px;margin:0 0 3px;color:var(--navy)}
-.card .hint{font-size:11.5px;color:var(--mut);margin:0 0 12px}
+#vizHost{height:820px;border:1px solid var(--line);border-radius:10px;background:#fff;
+         overflow:hidden}
+#vizHost tableau-viz{width:100%;height:100%}
+.fallback{padding:24px;text-align:center;color:var(--mut)}
+.fallback h3{color:var(--navy);margin:0 0 7px;font-size:14px}
+code{background:#F1F4F7;padding:1px 5px;border-radius:4px;font-size:11.5px;
+     font-family:ui-monospace,Menlo,monospace}
 
-/* tableau frame */
-#vizHost{min-height:660px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
-.fallback{padding:26px;text-align:center;color:var(--mut)}
-.fallback h3{color:var(--navy);margin:0 0 8px;font-size:15px}
-.fallback code{background:#F4F6F9;padding:2px 6px;border-radius:4px;font-size:12.5px}
-.manual{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;
-        background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px}
-.manual label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;
-              color:var(--mut);font-weight:600;margin-bottom:4px}
-select{padding:8px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px;min-width:145px}
-.reset{padding:9px 14px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;
-       font-size:13px;color:var(--mut);font-weight:600}
+/* right rail is a fixed-height column so nothing falls off screen */
+.rail{display:flex;flex-direction:column;gap:10px;height:820px}
 
-/* alert */
-.alert{background:linear-gradient(180deg,#fff,#FAFCFF);border:1px solid #CFE6FA;border-left:5px solid var(--blue);
-       border-radius:12px;padding:15px 17px;margin-bottom:16px;box-shadow:0 1px 3px rgba(3,45,96,.07)}
-.alert .top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.slack{width:20px;height:20px;border-radius:5px;background:#4A154B;color:#fff;font-size:12px;
-       display:grid;place-items:center;font-weight:700}
-.alert h3{margin:0;font-size:14px;color:var(--navy)}
-.alert .who{font-size:11px;color:var(--mut);margin-left:auto}
-.alert p{margin:0 0 10px;font-size:13.5px}
-.alert .rec{background:#F0F8FF;border-radius:8px;padding:10px 12px;font-size:13px}
-.pill{display:inline-block;background:#FEECEB;color:var(--red);border-radius:5px;padding:1px 7px;font-weight:700}
+/* ---------- alert ---------- */
+.alert{background:linear-gradient(180deg,#fff,#F8FBFF);border:1px solid #CFE6FA;
+       border-left:4px solid var(--blue);border-radius:10px;padding:11px 13px;flex:0 0 auto;
+       box-shadow:0 1px 2px rgba(3,45,96,.06)}
+.alert .top{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.slack{width:17px;height:17px;border-radius:4px;background:#4A154B;color:#fff;font-size:10px;
+       display:grid;place-items:center;font-weight:700;flex:0 0 auto}
+.alert h3{margin:0;font-size:12.5px;color:var(--navy);line-height:1.25}
+.alert .who{font-size:10px;color:var(--mut);margin-left:auto;white-space:nowrap}
+.alert p{margin:0 0 7px;font-size:12.5px;line-height:1.45}
+.alert .rec{background:#F0F8FF;border-radius:6px;padding:7px 9px;font-size:12px;line-height:1.4}
+.pill{display:inline-block;background:#FEECEB;color:var(--red);border-radius:4px;
+      padding:0 5px;font-weight:700}
 
-/* kpis */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 13px}
-.kpi .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);font-weight:600}
-.kpi .v{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-top:2px}
-.kpi .d{font-size:11px;color:var(--mut)}
+/* ---------- kpis: 4 across, compact ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;flex:0 0 auto}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 8px}
+.kpi .k{font-size:9px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);
+        font-weight:700;line-height:1.2}
+.kpi .v{font-size:17px;font-weight:700;letter-spacing:-.4px;margin-top:1px;line-height:1.1}
+.kpi .d{font-size:9.5px;color:var(--mut);line-height:1.2}
 .v.bad{color:var(--red)}
 
-/* AI */
-.ai{background:linear-gradient(170deg,#032D60,#064A8F);border-radius:12px;padding:16px 17px;color:#fff;margin-bottom:16px}
-.ai h2{color:#fff;font-size:13px;margin:0 0 3px;display:flex;align-items:center;gap:7px}
-.spark{width:17px;height:17px;border-radius:4px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:10px}
-.ai .hint{color:rgba(255,255,255,.66);font-size:11.5px;margin:0 0 12px}
-.ins{background:rgba(255,255,255,.09);border-left:2px solid #57B0F5;border-radius:0 7px 7px 0;
-     padding:9px 11px;margin-bottom:7px;font-size:13px;line-height:1.5;animation:fade .4s ease both}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* ---------- AI insights: scrolls internally, never pushes the chat away ---------- */
+.ai{background:linear-gradient(170deg,#032D60,#064A8F);border-radius:10px;padding:11px 12px;
+    color:#fff;display:flex;flex-direction:column;min-height:0;flex:1 1 auto}
+.ai h2{color:#fff;font-size:12px;margin:0;display:flex;align-items:center;gap:6px}
+.spark{width:15px;height:15px;border-radius:4px;background:rgba(255,255,255,.22);
+       display:grid;place-items:center;font-size:9px}
+.ai .hint{color:rgba(255,255,255,.6);font-size:10.5px;margin:2px 0 7px}
+.inswrap{overflow-y:auto;min-height:0;flex:1 1 auto;padding-right:3px}
+.inswrap::-webkit-scrollbar{width:5px}
+.inswrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:3px}
+.ins{background:rgba(255,255,255,.09);border-left:2px solid #57B0F5;border-radius:0 6px 6px 0;
+     padding:6px 9px;margin-bottom:5px;font-size:12px;line-height:1.42;
+     animation:fade .35s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 .ins b{color:#9FD5FF}
+.ins.lead{background:rgba(87,176,245,.17);border-left-color:#9FD5FF}
 
-/* chat */
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+/* ---------- chat: always visible at the bottom ---------- */
+.chat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+      flex:0 0 auto;display:flex;flex-direction:column}
+.chat h2{font-size:12px;margin:0 0 6px;color:var(--navy)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
 .chip{background:#F0F6FC;border:1px solid #D3E7F7;color:var(--blue);border-radius:999px;
-      padding:5px 11px;font-size:12px;cursor:pointer;font-weight:500}
-.chip:hover{background:var(--blue);color:#fff}
-.log{max-height:230px;overflow-y:auto;margin-bottom:10px}
-.msg{margin-bottom:9px;font-size:13.5px;line-height:1.55;animation:fade .3s ease both}
+      padding:3px 9px;font-size:11px;cursor:pointer;font-weight:500;white-space:nowrap}
+.chip:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.log{height:104px;overflow-y:auto;margin-bottom:7px}
+.log::-webkit-scrollbar{width:5px}
+.log::-webkit-scrollbar-thumb{background:#D5DBE1;border-radius:3px}
+.msg{margin-bottom:6px;font-size:12px;line-height:1.45;animation:fade .3s ease both}
 .msg.q{text-align:right}
-.msg.q span{background:var(--blue);color:#fff;padding:7px 12px;border-radius:13px 13px 3px 13px;display:inline-block;max-width:88%;text-align:left}
-.msg.a span{background:#F4F6F9;padding:9px 12px;border-radius:13px 13px 13px 3px;display:inline-block;max-width:94%;border-left:2px solid var(--blue)}
-.ask{display:flex;gap:7px}
-.ask input{flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px}
-.ask button{padding:9px 16px;background:var(--blue);color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:600}
-footer{margin-top:24px;padding-top:14px;border-top:1px solid var(--line);color:var(--mut);font-size:11.5px;line-height:1.7}
+.msg.q span{background:var(--blue);color:#fff;padding:5px 10px;border-radius:11px 11px 3px 11px;
+            display:inline-block;max-width:88%;text-align:left}
+.msg.a span{background:#F3F6F9;padding:6px 10px;border-radius:11px 11px 11px 3px;
+            display:inline-block;max-width:95%;border-left:2px solid var(--blue)}
+.ask{display:flex;gap:6px}
+.ask input{flex:1;min-width:0;padding:7px 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px}
+.ask input:focus{outline:2px solid var(--blue);outline-offset:1px}
+.ask button{padding:7px 13px;background:var(--blue);color:#fff;border:0;border-radius:7px;
+            cursor:pointer;font-weight:600;font-size:12.5px}
+.ask button:hover{background:#005FB2}
+
+footer{margin-top:12px;padding-top:9px;border-top:1px solid var(--line);
+       color:var(--mut);font-size:11px;line-height:1.55}
 .gov{color:var(--green);font-weight:600}
 </style>
 </head>
@@ -106,7 +127,7 @@ footer{margin-top:24px;padding-top:14px;border-top:1px solid var(--line);color:v
   <div class="logo">WI</div>
   <div>
     <h1>Workforce Intelligence — Retention Risk</h1>
-    <p class="sub">A Tableau dashboard wired to a live AI insight layer · 12,800-person sales &amp; service workforce</p>
+    <p class="sub">A Tableau dashboard wired to a live AI insight layer · 12,800-person workforce</p>
   </div>
   <div class="badge">⚠ Synthetic demo data — no real employee records</div>
 </header>
@@ -117,34 +138,23 @@ footer{margin-top:24px;padding-top:14px;border-top:1px solid var(--line);color:v
   <span class="cur" id="cur"></span>
 </div>
 
-<div class="manual" id="manual" style="display:none">
-  <div><label>Region</label><select id="fRegion"></select></div>
-  <div><label>Channel</label><select id="fChannel"></select></div>
-  <div><label>Tenure</label><select id="fTenure"></select></div>
-  <div><label>Pay type</label><select id="fComm"></select></div>
-  <button class="reset" id="reset">Reset</button>
-</div>
-
 <div class="grid">
-  <div>
-    <div id="vizHost"></div>
-  </div>
+  <div id="vizHost"></div>
 
-  <div>
+  <div class="rail">
     <div class="alert" id="alert"></div>
     <div class="kpis" id="kpis"></div>
     <div class="ai">
       <h2><span class="spark">✦</span> Auto-detected insights</h2>
-      <p class="hint">Recomputed from the Tableau dashboard's current filter selection.</p>
-      <div id="insights"></div>
+      <p class="hint">Recomputed from the dashboard's current filter selection.</p>
+      <div class="inswrap" id="insights"></div>
     </div>
-    <div class="card">
+    <div class="chat">
       <h2>Ask the data</h2>
-      <p class="hint">Answers respect the filters applied in the Tableau dashboard.</p>
       <div class="chips" id="chips"></div>
       <div class="log" id="log"></div>
       <div class="ask">
-        <input id="q" placeholder="e.g. why is attrition rising?" autocomplete="off">
+        <input id="q" placeholder="e.g. why is attrition high?" autocomplete="off">
         <button id="send">Ask</button>
       </div>
     </div>
@@ -153,12 +163,12 @@ footer{margin-top:24px;padding-top:14px;border-top:1px solid var(--line);color:v
 
 <footer>
   <b>What this is.</b> A personal prototype: a Tableau dashboard embedded with the Tableau
-  Embedding API v3, with a filter-change listener that feeds the current selection into a small
-  insight engine — so the narrative, the alert and the Q&amp;A all follow whatever the user filters
-  in Tableau. Conceptually inspired by Tableau Pulse, Tableau Agent and Agentforce; this is my own
-  lightweight take, not those products.<br>
-  <span class="gov">Privacy by design:</span> fully synthetic, randomly generated data. No individual
-  records are shown and any group smaller than 5 people is suppressed to prevent re-identification.
+  Embedding API v3, with a filter-change listener feeding the current selection into a small
+  insight engine — so the narrative, the alert and the Q&amp;A follow whatever is filtered in
+  Tableau. Conceptually inspired by Tableau Pulse, Tableau Agent and Agentforce; my own
+  lightweight take, not those products.
+  <span class="gov">Privacy by design:</span> fully synthetic data; no individual records shown;
+  groups under 5 suppressed.
 </footer>
 </div>
 
@@ -171,6 +181,12 @@ const DIMS=["division","function","role","pay_type","commission_based","work_loc
   "employment_type","channel","region","tenure_band","salary_band","performance_rating",
   "performance_band","over_time","business_travel","job_level","stock_option_level",
   "promoted_last_24m","on_performance_plan","education","marital_status"];
+
+/* Only these are treated as USER filter controls on the dashboard.
+   Sheet-level design filters (e.g. a sheet pinned to Risk Cohort = High, or a
+   scatter pinned to Commission Based = Yes) must NOT be read as user selections -
+   that would make the AI panel disagree with the dashboard. */
+const FILTER_DIMS=["division","region","tenure_band","pay_type","function","work_location"];
 const F={};  // active filters: dim -> Set of allowed values (absent = all)
 
 /* accept either Tableau Public URL format */
@@ -277,18 +293,23 @@ function render(){
 
   const vp=groupRate(idx,"commission_based");
   const y=vp.find(g=>g.label==="Yes"), no=vp.find(g=>g.label==="No");
-  const out=[`Company-wide attrition is <b>${pct(base)}</b> across ${num(idx.length)} employees in view — `+
-    `on its own, unremarkable.`];
-  if(y&&no) out.push(`But it isn't evenly spread: the <b>variable-pay segment runs ${p0(y.rate)}</b> `+
-    `(${num(y.n)} people) versus <b>${p0(no.rate)}</b> for salaried and fixed-pay staff `+
-    `(${num(no.n)}) — roughly <b>${(y.rate/Math.max(no.rate,.001)).toFixed(1)}x</b>. `+
-    `This is a segment problem, not a company problem.`);
-  if(co) out.push(`The model flags <b>${num(co.size)} employees (${p0(co.share)})</b> as high risk — <b>${p0(co.pctComm)}</b> in commission-based roles, ${p0(co.pctEarly)} within their first two years.`);
+  const out=[];
+  // lead line: the headline number
+  out.push(`<b>${pct(base)}</b> attrition across <b>${num(idx.length)}</b> employees in view.`);
+  // the one insight that matters most: is it concentrated?
+  if(y&&no) out.push(`Variable pay <b>${p0(y.rate)}</b> vs salaried <b>${p0(no.rate)}</b> — `+
+    `<b>${(y.rate/Math.max(no.rate,.001)).toFixed(1)}x</b>. Concentrated, not company-wide.`);
+  if(co) out.push(`<b>${num(co.size)}</b> flagged high risk (<b>${p0(co.share)}</b>), `+
+    `${p0(co.pctComm)} commission-based, ${p0(co.pctEarly)} in their first 2 years.`);
+  // top two drivers only
+  for(const d of dv.slice(0,2)) out.push(`${NICE[d.dim][0].toUpperCase()+NICE[d.dim].slice(1)} `+
+    `<b>“${d.label}”</b>: <b>${p0(d.rate)}</b> (${(d.lift*100).toFixed(0)>0?'+':''}`+
+    `${(d.lift*100).toFixed(0)} pts), ${num(d.n)} people.`);
+  if(st) out.push(`Most stable: ${NICE[st.dim]} <b>“${st.label}”</b> at <b>${p0(st.rate)}</b>.`);
   out.push(trendText(qcounts(idx)));
-  for(const d of dv) out.push(`${NICE[d.dim][0].toUpperCase()+NICE[d.dim].slice(1)} <b>“${d.label}”</b> shows <b>${p0(d.rate)}</b> attrition (${(d.lift*100).toFixed(0)>0?'+':''}${(d.lift*100).toFixed(0)} pts vs average), affecting ${num(d.n)} people.`);
-  if(st) out.push(`By contrast, ${NICE[st.dim]} <b>“${st.label}”</b> is stable at <b>${p0(st.rate)}</b> (${(st.lift*100).toFixed(0)} pts) — risk is concentrated, not company-wide.`);
-  if(co&&co.quota!=null) out.push(`Median quota attainment in the high-risk cohort is <b>${p0(co.quota)}</b>${co.conv!=null?` and median lead conversion <b>${(co.conv*100).toFixed(1)}%</b>`:""} — pointing to performance and tenure rather than base pay.`);
-  document.getElementById("insights").innerHTML=out.map(t=>`<div class="ins">${t}</div>`).join("");
+  if(co&&co.quota!=null) out.push(`High-risk cohort median quota <b>${p0(co.quota)}</b>`+
+    (co.conv!=null?`, lead conversion <b>${(co.conv*100).toFixed(1)}%</b>`:"")+` — the coaching lever.`);
+  document.getElementById("insights").innerHTML=out.slice(0,7).map((t,i)=>`<div class="ins${i===0?" lead":""}">${t}</div>`).join("");
 
   const A=document.getElementById("alert");
   if(co&&dv.length){const d=dv[0];
@@ -353,7 +374,7 @@ function answer(qs){
   if(/overall|total|rate|attrition/.test(q))return `Overall attrition is ${pct(base)} across ${num(idx.length)} employees in view.`;
   return `Try: “why is attrition rising?”, “who is in the high-risk cohort?”, “attrition by salary band”, “what's the trend?”, or “what should we do?”`;
 }
-const CHIPS=["Is this a company-wide problem?","Attrition by division","Who is in the high-risk cohort?","Attrition by pay model","Does overtime matter?","What should we do?"];
+const CHIPS=["Why so high?","Who's at risk?","By pay model","By division","What should we do?"];
 function ask(text){ if(!text.trim())return;
   const log=document.getElementById("log");
   log.insertAdjacentHTML("beforeend",`<div class="msg q"><span>${text}</span></div>`);
@@ -392,7 +413,8 @@ async function syncFromViz(viz){
         // name-based mapping first, then fall back to matching on the values
         let dim=mapField(f.fieldName) || mapByValues(vals);
         DETECTED.push({field:f.fieldName, mapped:dim, n:vals.length});
-        if(!dim)continue;
+        if(!dim) continue;
+        if(!FILTER_DIMS.includes(dim)) continue;       // ignore sheet-level design filters
         if(!vals.length) continue;
         const all=L[dim].filter(v=>v!=="");
         if(vals.length>=all.length) continue;          // "all selected" = no filter
@@ -419,6 +441,7 @@ function initViz(){
   const viz=document.createElement("tableau-viz");
   viz.setAttribute("src",toEmbedUrl(D.vizUrl));
   viz.setAttribute("toolbar","bottom");
+  viz.setAttribute("hide-tabs","");
   viz.setAttribute("hide-tabs","");
   viz.style.width="100%";
   host.innerHTML=""; host.appendChild(viz);
